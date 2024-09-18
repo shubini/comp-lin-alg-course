@@ -21,8 +21,11 @@ def basic_matvec(A, x):
 
     :return b: m-dimensional numpy array
     """
-
-    raise NotImplementedError
+    b = np.zeros(A.shape[0])
+    for i in range(A.shape[0]):
+        for j in range(len(x)):
+            b[i] += A[i, j] * x[j]
+    return b
 
 
 def column_matvec(A, x):
@@ -39,8 +42,10 @@ def column_matvec(A, x):
 
     This should be implemented using a single loop over the entries of x
     """
-
-    raise NotImplementedError
+    b = np.zeros(A.shape[0])
+    for i in range(len(x)):
+        b += np.array(x[i] * A[:, i])
+    return b
 
 
 def timeable_basic_matvec():
@@ -93,8 +98,8 @@ def rank2(u1, u2, v1, v2):
     :param v2: n-dimensional numpy array
     """
 
-    raise NotImplementedError
-
+    B = np.array([u1, u2]).T
+    C = np.array([np.conjugate(v1), np.conjugate(v2)])
     A = B.dot(C)
 
     return A
@@ -108,8 +113,8 @@ def rank1pert_inv(u, v):
     :param u: m-dimensional numpy array
     :param v: m-dimensional numpy array
     """
-
-    raise NotImplementedError
+    m = len(u)
+    Ainv = np.eye(m) - (np.outer(u, v.conj()) / (1 + np.dot(v.conj(), (u))))
 
     return Ainv
 
@@ -124,7 +129,9 @@ def ABiC(Ahat, xr, xi):
     :return zr: m-dimensional numpy arrays containing the real part of z.
     :return zi: m-dimensional numpy arrays containing the imaginary part of z.
     """
-
-    raise NotImplementedError
+    Bhat = np.tril(Ahat, k=0) + np.tril(Ahat, k=0).T - np.diag(np.diag(Ahat))
+    Chat = np.triu(Ahat, k=1) - np.triu(Ahat, k=1).T
+    zr = Bhat@xr - Chat@xi
+    zi = Chat@xr + Bhat@xi
 
     return zr, zi
